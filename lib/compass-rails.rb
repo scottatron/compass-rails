@@ -14,13 +14,14 @@ module CompassRails
     def load_rails
       return if defined?(::Rails) && ::Rails.respond_to?(:application) && !::Rails.application.nil?
 
-      rails_config_path = Dir.pwd
+      rails_config_path = ENV['RAILS_ROOT'] || Dir.pwd
       until File.exists?(File.join(rails_config_path, 'config', 'application.rb')) do
         raise 'Rails application not found' if rails_config_path == '/'
         rails_config_path = File.join(rails_config_path, '..')
       end
       #load the rails config
-      require "#{rails_config_path}/config/application.rb"
+      require "#{rails_config_path}/config/application"
+      
       if rails31? || rails32?
         require 'sass-rails'
         require 'sprockets/railtie'
